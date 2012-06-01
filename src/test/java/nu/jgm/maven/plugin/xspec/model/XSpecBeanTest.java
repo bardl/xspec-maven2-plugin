@@ -1,6 +1,5 @@
 package nu.jgm.maven.plugin.xspec.model;
 
-import nu.jgm.maven.plugin.xspec.model.XSpecBean;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -8,7 +7,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +21,7 @@ public class XSpecBeanTest {
     public void createXSpecBean() throws IOException, SAXException, ParserConfigurationException {
         String outputDirectory = "outputdir";
         String resource = new File(getClass().getClassLoader().getResource("test_xslt/escape-for-regex.xspec").getFile()).getCanonicalPath();
-        XSpecBean xSpecBean = new XSpecBean(new File(outputDirectory), new File(resource), new File("test/resources/test_xslt"));
+        XSpecBean xSpecBean = new XSpecBean(new File(outputDirectory), new File(resource), new File("test/resources/test_xslt"), null);
         Assert.assertEquals("Wrong path for xspec-file", resource, xSpecBean.getFileUnderTest().getCanonicalPath());
         Assert.assertEquals("Wrong filename for xslt file to test", new File("test/resources/test_xslt/escape-for-regex.xslt").getCanonicalPath(), xSpecBean.getFileName());
         Assert.assertEquals("Wrong filename for report file", new File(outputDirectory + "/escape-for-regex-report.htm").getCanonicalPath(), xSpecBean.getOutputFileReport().getCanonicalPath());

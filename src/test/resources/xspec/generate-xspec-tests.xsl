@@ -44,6 +44,7 @@
 <xsl:template match="x:description" mode="x:generate-tests">
   <!-- The compiled stylesheet element. -->
   <stylesheet version="2.0">
+      <xsl:comment select="projectBaseDir"/>
     <xsl:apply-templates select="." mode="x:copy-namespaces" />
   	<import href="{$stylesheet-uri}" />
   	<import href="{resolve-uri('generate-tests-utils.xsl', static-base-uri())}"/>

@@ -58,6 +58,8 @@ public class XSpecTestRunner {
 
     private final File xspecDirectory;
 
+    private final File xsltDirectory;
+
     private final StreamSource junitXslt;
 
     private File junitReportsDir = null;
@@ -71,8 +73,8 @@ public class XSpecTestRunner {
      * @param outputDir      the folder where the test-reports are written to
      * @param xspecDirectory the basedir of the xspec files
      */
-    public XSpecTestRunner(File outputDir, File xspecDirectory, Log log) {
-        this(outputDir, xspecDirectory, null, log);
+    public XSpecTestRunner(File outputDir, File xspecDirectory, File xsltDirectory, Log log) {
+        this(outputDir, xspecDirectory, null, xsltDirectory, log);
     }
 
     /**
@@ -81,14 +83,16 @@ public class XSpecTestRunner {
      * @param outputDir      the folder where the test-reports are written to
      * @param xspecDirectory the basedir of the xspec files
      */
-    public XSpecTestRunner(File outputDir, File xspecDirectory, File junitReportsDir, Log log) {
+    public XSpecTestRunner(File outputDir, File xspecDirectory, File junitReportsDir, File xsltDirectory, Log log) {
         this.outputDir = outputDir;
         this.xspecDirectory = xspecDirectory;
+        this.xsltDirectory = xsltDirectory;
         this.xspecTestGenFile = new File(tempDir, "xspec-0.3.0/src/compiler/generate-xspec-tests.xsl");
         this.xspecReportGenFile = new File(tempDir, "xspec-0.3.0/src/reporter/format-xspec-report.xsl");
         this.junitXslt = new StreamSource(getClass().getClassLoader().getResourceAsStream("junit-report.xsl"));
         this.junitReportsDir = junitReportsDir;
         this.log = log;
+        System.out.println("********************************** xsltDirectory: " + xsltDirectory);
     }
 
 
@@ -99,9 +103,10 @@ public class XSpecTestRunner {
 
         Templates templateXspec = transformerFactory.newTemplates(xspecXsl);
 
-
+        
         //transforms xspec file to executable xslt test file
         Transformer transformerTestFile = templateXspec.newTransformer();
+        transformerTestFile.setParameter("xslt_dir", xsltDirectory.getCanonicalPath().replaceAll("(\\\\)", "/") + "/");
         transformerTestFile.transform(xspecTestFile, new StreamResult(xSpecBean.getOutputFileTest()));
 
         //transformation executing the test with the given initial template to the results file
@@ -125,7 +130,7 @@ public class XSpecTestRunner {
     public XSpecTestResults executeTests() throws Exception {
 
         final XSpecTestResults testResults = new XSpecTestResults();
-        transformerFactory.getConfiguration().setMessageEmitterClass(nu.jgm.maven.plugin.xspec.utils.NullMessageEmitter.class.getName());
+        //transformerFactory.getConfiguration().setMessageEmitterClass(nu.jgm.maven.plugin.xspec.utils.NullMessageEmitter.class.getName());
 
         final File outputFolder = new File(outputDir, "xspec");
 
@@ -137,7 +142,7 @@ public class XSpecTestRunner {
             final Collection collection = FileUtils.listFiles(xspecDirectory, new String[]{"xspec"}, true);
             if (collection != null && !collection.isEmpty()) {
                 for (Object file : collection) {
-                    runTests(new XSpecBean(outputFolder, (File) file, xspecDirectory));
+                    runTests(new XSpecBean(outputFolder, (File) file, xspecDirectory, xsltDirectory));
                 }
 
                 // Examine result-files and look for failures

@@ -31,10 +31,11 @@ public class XSpecBean {
      * @param outputDir output directory for generated files
      * @param xspecFile the xspec file under test
      * @param baseDir the basedir of the xspec tests
+     * @param xsltDirectory
      */
-    public XSpecBean(final File outputDir, final File xspecFile, final File baseDir) throws IOException, SAXException, ParserConfigurationException {
-        name = getFileToTest(xspecFile, baseDir);
-
+    public XSpecBean(final File outputDir, final File xspecFile, final File baseDir, File xsltDirectory) throws IOException, SAXException, ParserConfigurationException {
+        name = getFileToTest(xspecFile, xsltDirectory != null ? xsltDirectory : baseDir);
+System.out.println("********************************** name: " + name);
         String fileExtension = "";
         if (name.lastIndexOf(".") != -1) {
             fileExtension = name.substring(name.lastIndexOf("."));
@@ -52,6 +53,8 @@ public class XSpecBean {
 	    SAXParser saxParser = factory.newSAXParser();
         XSpecStylesheet specStylesheet = new XSpecStylesheet();
         saxParser.parse(xspecFile.getCanonicalPath(), specStylesheet);
+System.out.println("********************************** baseDire: " + addFolderSuffixIfNeeded(baseDir));
+System.out.println("********************************** specStyleSheet: " + specStylesheet.getStyleSheetToTest());
         return new File(addFolderSuffixIfNeeded(baseDir) + specStylesheet.getStyleSheetToTest()).getCanonicalPath();
     }
 

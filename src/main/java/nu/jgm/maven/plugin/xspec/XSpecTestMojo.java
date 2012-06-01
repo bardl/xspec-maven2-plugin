@@ -45,11 +45,26 @@ public class XSpecTestMojo extends AbstractMojo {
     private File outputDirectory;
 
     /**
+     * Location of the file.
+     *
+     * @parameter expression="${basedir}"
+     * @required
+     */
+    private File baseDirectory;
+
+    /**
      * Location of the xspec test-files
      *
      * @parameter
      */
     private File xspecDirectory = null;
+
+    /**
+     * Location of the xslt files.
+     *
+     * @parameter
+     */
+    private File xsltDirectory = null;
 
 
     /**
@@ -70,7 +85,7 @@ public class XSpecTestMojo extends AbstractMojo {
         } else {
             try {
                 long start = System.currentTimeMillis();
-                final XSpecTestResults testResults = new XSpecTestRunner(outputDirectory, xspecDirectory, getLog()).executeTests();
+                final XSpecTestResults testResults = new XSpecTestRunner(outputDirectory, xspecDirectory, xsltDirectory, getLog()).executeTests();
                 writeOutput(testResults, System.currentTimeMillis() - start);
 
                 if (testResults.hasFailedTests() && !MessageHolder.isIgnoreErrors()) {
@@ -83,6 +98,13 @@ public class XSpecTestMojo extends AbstractMojo {
                 throw new MojoExecutionException(e.getMessage());
             }
         }
+    }
+
+    private File getXsltDirectory() {
+        if (xsltDirectory != null) {
+            xsltDirectory = new File(baseDirectory + xsltDirectory.toString());
+        }
+        return xsltDirectory;
     }
 
     private void writeOutput(XSpecTestResults testResults, long executionTime) {
