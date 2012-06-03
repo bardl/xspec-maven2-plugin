@@ -1,15 +1,8 @@
-package nu.jgm.maven.plugin.xspec.model;
+package org.xspec.result;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Created by IntelliJ IDEA.
- * User: bardl
- * Date: 2012-maj-19
- * Time: 10:14:29
- * To change this template use File | Settings | File Templates.
- */
 public class XSpecTestResultsTest {
 
     @Test

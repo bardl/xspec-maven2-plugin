@@ -1,22 +1,9 @@
-package nu.jgm.maven.plugin.xspec.utils;
+package org.xspec.compiler;
 
-import net.sf.saxon.expr.SlashExpression;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-
-/**
- * Created by IntelliJ IDEA.
- * User: bardl
- * Date: 2012-maj-16
- * Time: 18:56:05
- * To change this template use File | Settings | File Templates.
- */
 public class XSpecStylesheet extends DefaultHandler {
 
     private String styleSheetToTest;

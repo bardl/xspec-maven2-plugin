@@ -1,8 +1,5 @@
-package nu.jgm.maven.plugin.xspec.utils;
+package org.xspec.compiler;
 
-/**
- * @author Joakim Sundqvist
- */
 public class MessageHolder {
 
     private static boolean ignoreErrors = false;

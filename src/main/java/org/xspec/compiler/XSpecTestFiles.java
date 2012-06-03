@@ -1,6 +1,5 @@
-package nu.jgm.maven.plugin.xspec.model;
+package org.xspec.compiler;
 
-import nu.jgm.maven.plugin.xspec.utils.XSpecStylesheet;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -9,10 +8,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * @author Joakim Sundqvist
- */
-public class XSpecBean {
+public class XSpecTestFiles {
 
     public static final String RESULT_SUFFIX = "-result.xml";
     public static final String REPORT_SUFFIX = "-report.htm";
@@ -33,9 +29,9 @@ public class XSpecBean {
      * @param baseDir the basedir of the xspec tests
      * @param xsltDirectory
      */
-    public XSpecBean(final File outputDir, final File xspecFile, final File baseDir, File xsltDirectory) throws IOException, SAXException, ParserConfigurationException {
+    public XSpecTestFiles(final File outputDir, final File xspecFile, final File baseDir, File xsltDirectory) throws IOException, SAXException, ParserConfigurationException {
         name = getFileToTest(xspecFile, xsltDirectory != null ? xsltDirectory : baseDir);
-System.out.println("********************************** name: " + name);
+
         String fileExtension = "";
         if (name.lastIndexOf(".") != -1) {
             fileExtension = name.substring(name.lastIndexOf("."));
@@ -53,8 +49,7 @@ System.out.println("********************************** name: " + name);
 	    SAXParser saxParser = factory.newSAXParser();
         XSpecStylesheet specStylesheet = new XSpecStylesheet();
         saxParser.parse(xspecFile.getCanonicalPath(), specStylesheet);
-System.out.println("********************************** baseDire: " + addFolderSuffixIfNeeded(baseDir));
-System.out.println("********************************** specStyleSheet: " + specStylesheet.getStyleSheetToTest());
+
         return new File(addFolderSuffixIfNeeded(baseDir) + specStylesheet.getStyleSheetToTest()).getCanonicalPath();
     }
 
@@ -81,24 +76,5 @@ System.out.println("********************************** specStyleSheet: " + specS
 
     public String getFileName() {
         return name.replace(XSPEC_SUFFIX, "");
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("XSpecBean {");
-        sb.append("\n\t");
-        sb.append("outputFileTest=").append(outputFileTest);
-        sb.append("\n\t");
-        sb.append("outputFileResult=").append(outputFileResult);
-        sb.append("\n\t");
-        sb.append("outputFileReport=").append(outputFileReport);
-        sb.append("\n\t");
-        sb.append("fileUnderTest=").append(fileUnderTest);
-        sb.append("\n\t");
-        sb.append("fileName=").append(name);
-        sb.append("\n");
-        sb.append('}');
-        return sb.toString();
     }
 }

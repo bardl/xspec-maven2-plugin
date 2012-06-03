@@ -1,9 +1,9 @@
-package nu.jgm.maven.plugin.xspec.report;
+package org.xspec;
 
 import net.sf.saxon.TransformerFactoryImpl;
-import nu.jgm.maven.plugin.xspec.model.XSpecBean;
-import nu.jgm.maven.plugin.xspec.utils.MessageHolder;
-import nu.jgm.maven.plugin.xspec.utils.Utilities;
+import org.xspec.compiler.XSpecTestFiles;
+import org.xspec.compiler.MessageHolder;
+import org.xspec.compiler.ZipHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -23,8 +23,6 @@ import java.util.Locale;
 
 /**
  * XSpec report generation
- *
- * @author Joakim Sundqvist
  *
  * @execute phase="test"
  * @goal report
@@ -86,7 +84,7 @@ public class XSpecReportMojo extends AbstractMavenReport {
             }
             
             private boolean test(File f){
-                return f.getName().endsWith(XSpecBean.RESULT_SUFFIX);
+                return f.getName().endsWith(XSpecTestFiles.RESULT_SUFFIX);
             }
         }, null));
 
@@ -108,7 +106,7 @@ public class XSpecReportMojo extends AbstractMavenReport {
 
         final File cssDir = new File(outputDirectory, "css");
         final File imagesDir = new File(outputDirectory, "images");
-        Utilities.createFolders(cssDir, imagesDir);
+        ZipHandler.createFolders(cssDir, imagesDir);
         try {
             //IOUtils.copy(getClass().getClassLoader().getResourceAsStream("site/icon_error_sml.gif"), new FileWriter(new File(imagesDir, "icon_error_sml.gif")));
             //IOUtils.copy(getClass().getClassLoader().getResourceAsStream("site/icon_success_sml.gif"), new FileWriter(new File(imagesDir, "icon_success_sml.gif")));

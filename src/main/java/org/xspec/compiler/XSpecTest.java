@@ -1,4 +1,4 @@
-package nu.jgm.maven.plugin.xspec;
+package org.xspec.compiler;
 
 import net.sf.saxon.Controller;
 import net.sf.saxon.TransformerFactoryImpl;
@@ -6,10 +6,8 @@ import net.sf.saxon.om.NamespaceResolver;
 import net.sf.saxon.sxpath.XPathEvaluator;
 import net.sf.saxon.sxpath.XPathExpression;
 import net.sf.saxon.trans.XPathException;
-import nu.jgm.maven.plugin.xspec.model.XSpecBean;
-import nu.jgm.maven.plugin.xspec.model.XSpecTestResult;
-import nu.jgm.maven.plugin.xspec.model.XSpecTestResults;
-import nu.jgm.maven.plugin.xspec.utils.Utilities;
+import org.xspec.result.XSpecTestResult;
+import org.xspec.result.XSpecTestResults;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.xml.sax.InputSource;
@@ -28,13 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.UUID;
 
-/**
- * Xspec test runner
- *
- * @author Joakim Sundqvist
- * @author Johan M�r�n
- */
-public class XSpecTestRunner {
+public class XSpecTest {
 
 
     private static final String XSPEC_MAIN = "{http://www.jenitennison.com/xslt/xspec}main";
@@ -67,23 +59,11 @@ public class XSpecTestRunner {
     private Log log;
 
 
-    /**
-     * Default constructor
-     *
-     * @param outputDir      the folder where the test-reports are written to
-     * @param xspecDirectory the basedir of the xspec files
-     */
-    public XSpecTestRunner(File outputDir, File xspecDirectory, File xsltDirectory, Log log) {
+    public XSpecTest(File outputDir, File xspecDirectory, File xsltDirectory, Log log) {
         this(outputDir, xspecDirectory, null, xsltDirectory, log);
     }
 
-    /**
-     * Default constructor
-     *
-     * @param outputDir      the folder where the test-reports are written to
-     * @param xspecDirectory the basedir of the xspec files
-     */
-    public XSpecTestRunner(File outputDir, File xspecDirectory, File junitReportsDir, File xsltDirectory, Log log) {
+    public XSpecTest(File outputDir, File xspecDirectory, File junitReportsDir, File xsltDirectory, Log log) {
         this.outputDir = outputDir;
         this.xspecDirectory = xspecDirectory;
         this.xsltDirectory = xsltDirectory;
@@ -92,11 +72,9 @@ public class XSpecTestRunner {
         this.junitXslt = new StreamSource(getClass().getClassLoader().getResourceAsStream("junit-report.xsl"));
         this.junitReportsDir = junitReportsDir;
         this.log = log;
-        System.out.println("********************************** xsltDirectory: " + xsltDirectory);
     }
 
-
-    private void runTests(final XSpecBean xSpecBean) throws Exception {
+    private void runTests(final XSpecTestFiles xSpecBean) throws Exception {
         Source xspecXsl = new StreamSource(xspecTestGenFile);
         Source xspecReportXml = new StreamSource(xspecReportGenFile);
         Source xspecTestFile = new StreamSource(xSpecBean.getFileUnderTest());
@@ -135,14 +113,14 @@ public class XSpecTestRunner {
         final File outputFolder = new File(outputDir, "xspec");
 
         //  Create temp folder
-        Utilities.createFolders(outputFolder, tempDir);
+        ZipHandler.createFolders(outputFolder, tempDir);
 
         try {
-            Utilities.unzipFile(tempDir, Utilities.createTempZipFile("xspec-0.3.0", "zip"));
+            ZipHandler.unzipFile(tempDir, ZipHandler.createTempZipFile("xspec-0.3.0", "zip"));
             final Collection collection = FileUtils.listFiles(xspecDirectory, new String[]{"xspec"}, true);
             if (collection != null && !collection.isEmpty()) {
                 for (Object file : collection) {
-                    runTests(new XSpecBean(outputFolder, (File) file, xspecDirectory, xsltDirectory));
+                    runTests(new XSpecTestFiles(outputFolder, (File) file, xspecDirectory, xsltDirectory));
                 }
 
                 // Examine result-files and look for failures
@@ -161,7 +139,7 @@ public class XSpecTestRunner {
     private void parseResultFiles(File outputFolder, XSpecTestResults testResults) throws MalformedURLException, XPathException, FileNotFoundException {
         final File[] files = outputFolder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.endsWith(XSpecBean.RESULT_SUFFIX);
+                return name.endsWith(XSpecTestFiles.RESULT_SUFFIX);
             }
         });
 
@@ -202,7 +180,7 @@ public class XSpecTestRunner {
         // Count number of skipped tests
         final XPathExpression skippedTestExpression = evaluator.createExpression("count(//x:test[@successful = 'skipped'])");
         final Long skippedCount = (Long) skippedTestExpression.evaluateSingle(saxSource);
-        final XSpecTestResult result = new XSpecTestResult(testCount.intValue(), failedCount.intValue(), skippedCount.intValue(), file.getName().replace(XSpecBean.XSPEC_SUFFIX, ""));
+        final XSpecTestResult result = new XSpecTestResult(testCount.intValue(), failedCount.intValue(), skippedCount.intValue(), file.getName().replace(XSpecTestFiles.XSPEC_SUFFIX, ""));
         return result;
     }
 

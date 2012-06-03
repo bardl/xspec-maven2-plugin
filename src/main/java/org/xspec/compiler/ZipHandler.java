@@ -1,4 +1,4 @@
-package nu.jgm.maven.plugin.xspec.utils;
+package org.xspec.compiler;
 
 import org.apache.commons.io.IOUtils;
 
@@ -7,10 +7,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-/**
- * @author Joakim Sundqvist
- */
-public abstract class Utilities {
+public class ZipHandler {
 
 
     /**
@@ -22,7 +19,7 @@ public abstract class Utilities {
     public static File createTempZipFile(final String prefix, final String suffix) throws IOException {
         final File tempFile = File.createTempFile(prefix, suffix);
         final OutputStream tempOutputStream = new FileOutputStream(tempFile);
-        final InputStream inputStream = Utilities.class.getClassLoader().getResourceAsStream(prefix + "." + suffix);
+        final InputStream inputStream = ZipHandler.class.getClassLoader().getResourceAsStream(prefix + "." + suffix);
         try {
             IOUtils.copy(inputStream, tempOutputStream);
         } finally {

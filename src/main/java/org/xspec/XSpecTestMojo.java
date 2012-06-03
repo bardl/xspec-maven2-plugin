@@ -1,24 +1,9 @@
-package nu.jgm.maven.plugin.xspec;
+package org.xspec;
 
-/*
- * Copyright 2001-2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-import nu.jgm.maven.plugin.xspec.model.XSpecTestResult;
-import nu.jgm.maven.plugin.xspec.model.XSpecTestResults;
-import nu.jgm.maven.plugin.xspec.utils.MessageHolder;
+import org.xspec.compiler.MessageHolder;
+import org.xspec.compiler.XSpecTest;
+import org.xspec.result.XSpecTestResult;
+import org.xspec.result.XSpecTestResults;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -28,11 +13,8 @@ import java.io.File;
 /**
  * Goal which runs xspec unit tests as a part of the maven test phase
  *
- * @author Joakim Sundqvist
- * @author Johan M�r�n
  * @goal test
  * @phase test
- * @since 0.1
  */
 public class XSpecTestMojo extends AbstractMojo {
 
@@ -85,7 +67,7 @@ public class XSpecTestMojo extends AbstractMojo {
         } else {
             try {
                 long start = System.currentTimeMillis();
-                final XSpecTestResults testResults = new XSpecTestRunner(outputDirectory, xspecDirectory, xsltDirectory, getLog()).executeTests();
+                final XSpecTestResults testResults = new XSpecTest(outputDirectory, xspecDirectory, xsltDirectory, getLog()).executeTests();
                 writeOutput(testResults, System.currentTimeMillis() - start);
 
                 if (testResults.hasFailedTests() && !MessageHolder.isIgnoreErrors()) {
@@ -98,13 +80,6 @@ public class XSpecTestMojo extends AbstractMojo {
                 throw new MojoExecutionException(e.getMessage());
             }
         }
-    }
-
-    private File getXsltDirectory() {
-        if (xsltDirectory != null) {
-            xsltDirectory = new File(baseDirectory + xsltDirectory.toString());
-        }
-        return xsltDirectory;
     }
 
     private void writeOutput(XSpecTestResults testResults, long executionTime) {

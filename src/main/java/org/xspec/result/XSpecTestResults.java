@@ -1,11 +1,8 @@
-package nu.jgm.maven.plugin.xspec.model;
+package org.xspec.result;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Joakim Sundqvist
- */
 public class XSpecTestResults { 
 
     private int numberOfTests;
@@ -54,14 +51,5 @@ public class XSpecTestResults {
                 .append(executionTime / 1000.0d)
                 .append(" sec.\n");
         return stringBuilder.toString();
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("XSpecTestResults");
-        sb.append("{testResults=").append(testResults);
-        sb.append('}');
-        return sb.toString();
     }
 }

@@ -1,8 +1,5 @@
-package nu.jgm.maven.plugin.xspec.model;
+package org.xspec.result;
 
-/**
- * @author Joakim Sundqvist
- */
 public class XSpecTestResult {
 
     private int numberOfTests;
@@ -51,17 +48,5 @@ public class XSpecTestResult {
         }
         stringBuilder.append("\n");
         return stringBuilder.toString();
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("XSpecTestResult");
-        sb.append("{numberOfTests=").append(numberOfTests);
-        sb.append(", failedTests=").append(failedTests);
-        sb.append(", skippedTests=").append(skippedTests);
-        sb.append(", testName='").append(testName).append('\'');
-        sb.append('}');
-        return sb.toString();
     }
 }
