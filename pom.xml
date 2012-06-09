@@ -5,9 +5,9 @@
         <!--<version>0.17</version>-->
     <!--</parent>-->
 
-    <scm>
-        <connection>scm:git:ssh://git@github.com:bardl/xspec-maven2-plugin.git</connection>
-    </scm>
+    <!--<scm>-->
+        <!--<connection>scm:git:ssh://git@github.com:bardl/xspec-maven2-plugin.git</connection>-->
+    <!--</scm>-->
 
     <!--<properties>-->
         <!--<maven.shade.plugin.version>1.6</maven.shade.plugin.version>-->
@@ -28,6 +28,19 @@
             </roles>
         </developer>
     </developers>
+
+    <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>pagero-releases</id>
+      <url>http://vpogit:8080/nexus/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>pagero-snapshots</id>
+      <url>http://vpogit:8080/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 
     <reporting>
         <plugins>
