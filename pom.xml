@@ -9,6 +9,7 @@
         <!--<connection>scm:git:ssh://git@github.com:bardl/xspec-maven2-plugin.git</connection>-->
     <!--</scm>-->
 
+	<!--test-->
     <!--<properties>-->
         <!--<maven.shade.plugin.version>1.6</maven.shade.plugin.version>-->
     <!--</properties>-->
